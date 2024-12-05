@@ -4,7 +4,7 @@ import com.example.demo.application.MemberService;
 import com.example.demo.application.dto.MemberCreateRequest;
 import com.example.demo.application.dto.MemberLoginRequest;
 import com.example.demo.application.dto.TokenInfo;
-import com.example.demo.domin.Member;
+import com.example.demo.domain.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

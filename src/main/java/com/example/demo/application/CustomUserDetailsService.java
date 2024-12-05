@@ -2,7 +2,7 @@ package com.example.demo.application;
 
 import com.example.demo.application.dto.CustomMemberInfo;
 import com.example.demo.application.dto.CustomUserDetails;
-import com.example.demo.domin.Member;
+import com.example.demo.domain.Member;
 import com.example.demo.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -3,14 +3,11 @@ package com.example.demo.application;
 import com.example.demo.application.dto.MemberCreateRequest;
 import com.example.demo.application.dto.TokenInfo;
 import com.example.demo.config.SecurityConfig;
-import com.example.demo.domin.Member;
+import com.example.demo.domain.Member;
 import com.example.demo.jwt.JwtTokenProvider;
 import com.example.demo.repository.MemberRepository;
-import jakarta.persistence.EntityManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashMap;
 import java.util.Map;
