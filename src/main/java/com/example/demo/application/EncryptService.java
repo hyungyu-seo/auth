@@ -26,8 +26,8 @@ public class EncryptService {
 
     public String byteArrayToString(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
-        for (byte abyte :bytes){
-            sb.append(abyte);
+        for (byte byteValue :bytes){
+            sb.append(byteValue);
             sb.append(" ");
         }
         return sb.toString();

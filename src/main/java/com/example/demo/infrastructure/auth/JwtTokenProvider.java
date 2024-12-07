@@ -1,7 +1,7 @@
-package com.example.demo.jwt;
+package com.example.demo.infrastructure.auth;
 
 import com.example.demo.application.CustomUserDetailsService;
-import com.example.demo.application.dto.TokenInfo;
+import com.example.demo.application.dto.TokenDto;
 import com.example.demo.domain.Member;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -31,8 +31,8 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // 유저 정보를 가지고 AccessToken 을 생성하는 메서드
-    public TokenInfo generateToken(Member member, String regNo) {
+
+    public TokenDto generateToken(Member member, String regNo) {
 
         Claims claims = Jwts.claims();
         claims.put("auth", member.getAuth());
@@ -52,7 +52,7 @@ public class JwtTokenProvider {
                 .compact();
 
 
-        return TokenInfo.of("Bearer", accessToken);
+        return TokenDto.of("Bearer", accessToken);
     }
 
 
@@ -66,6 +66,7 @@ public class JwtTokenProvider {
 
 
         UserDetails userDetails = customUserDetailsService.loadUserByUsername((String) claims.get("userId"));
+
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
