@@ -42,7 +42,7 @@ public class MemberController {
     @Operation(summary = "스크래핑 API")
     public ResponseEntity<String> memberManagement(Authentication authentication) throws IOException, JSONException {
         CustomMemberDetails userDetails = (CustomMemberDetails) authentication.getPrincipal();
-        memberService.processMemberRequest(userDetails.getUserId(), userDetails.getUsername(), userDetails.getRegNo());
+        memberService.processIncomeCheck(userDetails.getUserId(), userDetails.getUsername(), userDetails.getRegNo());
         return ResponseEntity.ok().body("성공");
     }
 
