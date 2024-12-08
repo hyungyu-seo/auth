@@ -60,7 +60,7 @@ public class MemberService {
     }
 
 
-    public Boolean checkUser(MemberCreateRequest request) {
+    private Boolean checkUser(MemberCreateRequest request) {
         if( isStringEmpty(request.userId()) || isStringEmpty(request.name()) || isStringEmpty(request.password()) || isStringEmpty(request.regNo())) {
             throw new MemberException.MemberErrorException("값이 없는 정보가 있습니다.");
         }
@@ -82,7 +82,7 @@ public class MemberService {
         } else throw new RuntimeException("가입할수 없는 유저입니다.");
     }
 
-    public boolean isStringEmpty(String str) {
+    private boolean isStringEmpty(String str) {
         return str == null || str.isEmpty();
     }
 
@@ -117,7 +117,7 @@ public class MemberService {
     }
 
 
-    public static TaxIncomeDto getTaxIncomeDtoFromJsonObject(JSONObject jsonObject) throws JSONException, JsonProcessingException {
+    private static TaxIncomeDto getTaxIncomeDtoFromJsonObject(JSONObject jsonObject) throws JSONException, JsonProcessingException {
 
         JSONObject data = jsonObject.getJSONObject("data");
 
@@ -150,7 +150,7 @@ public class MemberService {
 
     }
 
-    public static BigDecimal convert(String value) {
+    private static BigDecimal convert(String value) {
         if (value == null || value.isEmpty()) {
             throw new IllegalArgumentException("입력 값이 null 또는 비어 있습니다.");
         }

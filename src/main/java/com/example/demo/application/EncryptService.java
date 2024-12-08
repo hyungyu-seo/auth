@@ -24,7 +24,7 @@ public class EncryptService {
         return new String(decrypt, StandardCharsets.UTF_8);
     }
 
-    public String byteArrayToString(byte[] bytes) {
+    private String byteArrayToString(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
         for (byte byteValue :bytes){
             sb.append(byteValue);
@@ -33,7 +33,7 @@ public class EncryptService {
         return sb.toString();
     }
 
-    public byte[] stringToByteArray(String byteString) {
+    private byte[] stringToByteArray(String byteString) {
         String[] split = byteString.split("\\s");
         ByteBuffer buffer = ByteBuffer.allocate(split.length);
         for (String s : split) {
