@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.presentation;
 
 import com.example.demo.application.MemberService;
 import com.example.demo.application.dto.CustomMemberDetails;
@@ -40,9 +40,9 @@ public class MemberController {
 
     @PostMapping("/scrap")
     @Operation(summary = "스크래핑 API")
-    public ResponseEntity<String> memberTexInfoSave(Authentication authentication) throws IOException, JSONException {
+    public ResponseEntity<String> memberManagement(Authentication authentication) throws IOException, JSONException {
         CustomMemberDetails userDetails = (CustomMemberDetails) authentication.getPrincipal();
-        memberService.searchMemberInfo(userDetails.getUserId(), userDetails.getUsername(), userDetails.getRegNo());
+        memberService.processMemberRequest(userDetails.getUserId(), userDetails.getUsername(), userDetails.getRegNo());
         return ResponseEntity.ok().body("성공");
     }
 

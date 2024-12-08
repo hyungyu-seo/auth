@@ -12,6 +12,9 @@ import com.example.demo.domain.repository.MemberRepository;
 import com.example.demo.infrastructure.auth.JwtTokenProvider;
 import com.example.demo.infrastructure.TaxIncomeClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -44,7 +47,7 @@ public class MemberService {
     public String getDeterminedTaxAmount(String userId) {
         Member member = memberRepository.findByUserId(userId).orElseThrow();
 
-        BigDecimal calculatedTaxAmount = TaxManagement.calculateTaxAmount(member.getIncomeTax().getComprehensiveIncomeAmount(),
+        BigDecimal calculatedTaxAmount = TaxManagement.calculateDeterminedTaxAmount(member.getIncomeTax().getComprehensiveIncomeAmount(),
                 member.getIncomeTax().getIncomeDeductionCreditCard(),
                 member.getIncomeTax().getIncomeDeductionNationalPension(),
                 member.getIncomeTax().getTaxCredit());
@@ -55,16 +58,62 @@ public class MemberService {
 
 
     @Transactional
-    public void searchMemberInfo(String userId, String name, String regNo) throws JSONException, JsonProcessingException {
+    public void processMemberRequest(String userId, String name, String regNo) throws JSONException, JsonProcessingException {
 
         JSONObject jsonObject = taxIncomeClient.apiCallData(name, encryptService.decryptRegNo(regNo));
-        TaxIncomeDto taxIncome = TaxManagement.getTaxIncome(jsonObject);
+        TaxIncomeDto taxIncome = getTaxIncomeDtoFromJsonObject(jsonObject);
 
         memberRepository.findByUserId(userId).ifPresent(member ->
                 member.assignIncomeTax(IncomeTax.create(taxIncome.comprehensiveIncomeAmount(),
                                 taxIncome.incomeDeductionCreditCard(),
                                 taxIncome.incomeDeductionNationalPension(),
                                 taxIncome.taxCredit())));
+    }
+
+
+    public static TaxIncomeDto getTaxIncomeDtoFromJsonObject(JSONObject jsonObject) throws JSONException, JsonProcessingException {
+
+        JSONObject data = jsonObject.getJSONObject("data");
+
+        // 1년치 국민연금 공제액 총합
+        JSONArray incomeDeductionNationalPensionArray = data.getJSONObject("소득공제").getJSONArray("국민연금");
+        BigDecimal incomeDeductionNationalPension = BigDecimal.valueOf(0);
+        for(int i = 0; i < incomeDeductionNationalPensionArray.length(); i++) {
+            String value = incomeDeductionNationalPensionArray.getJSONObject(i).get("공제액").toString();
+            incomeDeductionNationalPension = incomeDeductionNationalPension.add(convert(value.replaceAll(",", "")));
+        }
+
+        // 1년치 신용카드 공제액 총합
+        JSONArray incomeDeductionCreditCardArray = data.getJSONObject("소득공제").getJSONObject("신용카드소득공제").getJSONArray("month");
+        BigDecimal incomeDeductionCreditCard = BigDecimal.valueOf(0);
+        for(int i = 0; i < incomeDeductionCreditCardArray.length(); i++) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            TypeReference<Map<String, String>> typeReference = new TypeReference<Map<String,String>>() {};
+
+            Map<String,String> valueMap = objectMapper.readValue(incomeDeductionCreditCardArray.getJSONObject(i).toString(), typeReference);;
+            incomeDeductionCreditCard = incomeDeductionCreditCard.add(convert(valueMap.values().stream().toList().get(0).replaceAll(",", "")));
+        }
+
+        // 1년치 종합소득금액
+        BigDecimal comprehensiveIncomeAmount = convert(data.getString("종합소득금액"));
+        // 1년치 세액공제 금액
+        BigDecimal taxCredit = convert(data.getJSONObject("소득공제").getString("세액공제").replaceAll(",", ""));
+
+
+        return new TaxIncomeDto(comprehensiveIncomeAmount, incomeDeductionCreditCard, incomeDeductionNationalPension, taxCredit);
+
+    }
+
+    public static BigDecimal convert(String value) {
+        if (value == null || value.isEmpty()) {
+            throw new IllegalArgumentException("입력 값이 null 또는 비어 있습니다.");
+        }
+
+        try {
+            return new BigDecimal(value.trim().replace(",", ""));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("잘못된 숫자 형식입니다: " + value, e);
+        }
     }
 
 
