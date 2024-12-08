@@ -3,14 +3,13 @@ package com.example.demo.application;
 import com.example.demo.application.dto.MemberCreateRequest;
 import com.example.demo.application.dto.TaxIncomeDto;
 import com.example.demo.application.dto.TokenDto;
-import com.example.demo.application.exception.MemberException;
 import com.example.demo.config.SecurityConfig;
 import com.example.demo.domain.IncomeTax;
 import com.example.demo.domain.Member;
 import com.example.demo.domain.TaxManagement;
 import com.example.demo.domain.repository.MemberRepository;
-import com.example.demo.infrastructure.auth.JwtTokenProvider;
 import com.example.demo.infrastructure.TaxIncomeClient;
+import com.example.demo.infrastructure.auth.JwtTokenProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,7 +61,7 @@ public class MemberService {
 
     private Boolean checkUser(MemberCreateRequest request) {
         if( isStringEmpty(request.userId()) || isStringEmpty(request.name()) || isStringEmpty(request.password()) || isStringEmpty(request.regNo())) {
-            throw new MemberException.MemberErrorException("값이 없는 정보가 있습니다.");
+            throw new RuntimeException("값이 없는 정보가 있습니다.");
         }
 
         boolean duplicateCheck = memberRepository.findByUserId(request.userId()).isPresent();
@@ -74,7 +73,7 @@ public class MemberService {
         users.put("조조", "810326-2715702");
 
         if( duplicateCheck ) {
-            throw new MemberException.MemberErrorException("이미 가입되어 있는 유저 입니다.");
+            throw new RuntimeException("이미 가입되어 있는 유저 입니다.");
         }
 
         if(users.containsKey(request.name())) {
