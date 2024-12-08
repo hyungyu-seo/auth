@@ -1,16 +1,19 @@
 package com.example.demo.application.exception;
 
-public class MemberException extends RuntimeException {
-  private final int statusCode;
+import lombok.Getter;
 
-  public MemberException(String message, int statusCode) {
+
+@Getter
+public class MemberException extends RuntimeException {
+
+  public MemberException(String message) {
       super(message);
-    this.statusCode = statusCode;
     }
 
-  public static class MemberFoundException extends MemberException {
-    public MemberFoundException() {
-      super("중복!", 404);
+  public static class MemberErrorException extends MemberException {
+    public MemberErrorException(String message) {
+      super(message);
     }
   }
+
 }

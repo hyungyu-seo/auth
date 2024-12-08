@@ -1,15 +1,16 @@
 package com.example.demo.application.dto;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public record CustomUserDetails(CustomMemberInfo member) implements UserDetails {
+public record CustomMemberDetails(CustomMemberDto member) implements UserDetails {
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -27,13 +28,17 @@ public record CustomUserDetails(CustomMemberInfo member) implements UserDetails 
         return member.userId();
     }
 
+    public String getUserId() {
+        return member.userId();
+    }
+
     public String getRegNo() {
         return member.regNo();
     }
 
     @Override
     public String getUsername() {
-        return member.userId();
+        return member.name();
     }
 
 
