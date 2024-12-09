@@ -105,7 +105,7 @@ public class MemberService {
     @Transactional
     public void processIncomeCheck(String userId, String name, String regNo) throws JSONException, JsonProcessingException {
 
-        JSONObject jsonObject = taxIncomeClient.apiCallData(name, encryptService.decryptRegNo(regNo));
+        JSONObject jsonObject = taxIncomeClient.callDataApi(name, encryptService.decryptRegNo(regNo));
         TaxIncomeDto taxIncome = getTaxIncomeDtoFromJsonObject(jsonObject);
 
         memberRepository.findByUserId(userId).ifPresent(member ->
@@ -162,7 +162,7 @@ public class MemberService {
     }
 
     public String getDeterminedTaxAmount(String userId) {
-        Member member = memberRepository.findByUserId(userId).orElseThrow();
+        Member member = memberRepository.findByUserId(userId).orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
         BigDecimal calculatedTaxAmount = TaxManagement.calculateDeterminedTaxAmount(member.getIncomeTax().getComprehensiveIncomeAmount(),
                 member.getIncomeTax().getIncomeDeductionCreditCard(),

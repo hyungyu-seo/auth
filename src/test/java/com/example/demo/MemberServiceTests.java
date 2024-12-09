@@ -5,12 +5,10 @@ import com.example.demo.application.MemberService;
 import com.example.demo.application.dto.MemberCreateRequest;
 import com.example.demo.application.dto.TokenDto;
 import com.example.demo.domain.Member;
-import com.example.demo.domain.repository.MemberRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.json.JSONException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,15 +25,12 @@ public class MemberServiceTests {
     @Autowired
     private EncryptService encryptService;
 
-    @Mock
-    private MemberRepository memberRepository;
-
     @Test
     @DisplayName("member 생성 테스트 (성공)")
     public void createMember() {
 
         // given
-        final MemberCreateRequest memberCreateRequest = new MemberCreateRequest("kw68", "123456", "관우", "681108-1582816");
+        final MemberCreateRequest memberCreateRequest = new MemberCreateRequest("68", "123456", "관우", "681108-1582816");
 
         // when
         Member result = memberService.createMember(memberCreateRequest);

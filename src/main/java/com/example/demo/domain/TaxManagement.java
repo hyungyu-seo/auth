@@ -15,6 +15,7 @@ public class TaxManagement {
                     taxBase.subtract(BigDecimal.valueOf(14000000)).multiply(BigDecimal.valueOf(0.15))
             ).setScale(0, RoundingMode.HALF_UP);
         } else if (taxBase.compareTo(BigDecimal.valueOf(88000000)) <= 0) {
+            BigDecimal test = taxBase.subtract(BigDecimal.valueOf(50000000)).multiply(BigDecimal.valueOf(0.24));
             result = BigDecimal.valueOf(6240000).add(
                     taxBase.subtract(BigDecimal.valueOf(50000000)).multiply(BigDecimal.valueOf(0.24))
             ).setScale(0, RoundingMode.HALF_UP);
